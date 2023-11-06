@@ -6,8 +6,8 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract marriage_license is ERC721 {
     // ATTRIBUTES
-    uint256 private token1;
-    uint256 private token2;
+    uint32 private token1;
+    uint32 private token2;
     
     address private spouse1;
     address private spouse2;
@@ -34,10 +34,11 @@ contract marriage_license is ERC721 {
         spouseCounter = 0;
         authorizedCounter = 0; 
         verifyAddressesToken = 0;
+        token1 = 50;
+        token2 = 51;
     }
 
-    //SIERC721 nftContract = IERC721(nftContractAddress);
-
+    IERC721 nftContract = IERC721(this);
 
     // STATE HANDLING
     event Divorce(address indexed spouse1, address indexed spouse2);
@@ -54,17 +55,18 @@ contract marriage_license is ERC721 {
         revert("NFT is non-transferable");
     }*/
     
+    // d sies at vi skal bruke den over for å disable transferring ved å overskrive men det funka ikke så gjør d som nedenfor istedet maybe
     function TransferFrom() internal virtual {
         revert("NFT is non-transferable");
     }
 
-    function createWeddingCertificate(uint256 tokenID1, uint256 tokenID2) public onlySpouse {
+    function createWeddingCertificate() public onlySpouse {
         require(isMarried, "Cannot produce wedding certificate for non-married people");
-        // muligens require at de ikke har eksisterende wedding certificate
-
+        require(nftContract.ownerOf(token1) == spouse1 || nftContract.ownerOf(token2) == spouse2,"Cannot create another wedding certificate when one exists for these spouses");
+        
         // Create the token IDs
-        token1 = tokenID1;
-        token2 = tokenID2;
+        token1 += 1;
+        token2 += 1;
 
         // Create the wedding certificates
         _mint(spouse1, token1);
@@ -108,7 +110,8 @@ contract marriage_license is ERC721 {
     }
 
     function enoughParticipantsVote(uint256 token, address sender) internal returns (bool) {
-        // Want to check if the token has been used to vote already
+        // Check if the token has been used to vote already, and that the owner is using the token
+        bool ownerToken = nftContract.ownerOf(token) == sender;
         bool alreadyVoted = false;
         for (uint8 i = 0; i < 3; i++) {
             if (token == tokensVoted[i]) {
@@ -117,7 +120,7 @@ contract marriage_license is ERC721 {
         }
 
         // If token has not already voted, check whether it is a spouse or an authorized address
-        if (!alreadyVoted) {
+        if (!alreadyVoted && ownerToken) {
             tokensVoted.push(token);
             if (sender == spouse1 || sender == spouse2) {
                 spouseCounter += 1;

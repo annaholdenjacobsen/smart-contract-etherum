@@ -274,18 +274,7 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "tokenID1",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "tokenID2",
-						"type": "uint256"
-					}
-				],
+				"inputs": [],
 				"name": "createWeddingCertificate",
 				"outputs": [],
 				"stateMutability": "nonpayable",
@@ -793,11 +782,11 @@
 			]
 		},
 		"marriage_license.sol": {
-			"keccak256": "0xe7c8da1263b401db1ed6a6280f18262da0ca0fcfbba18d33289e1e261929e696",
+			"keccak256": "0xe78911955ae498280be3acc524f9e57d13b0eefb9ba41b79b3a9f444d3ba670f",
 			"license": "none",
 			"urls": [
-				"bzz-raw://83eddcf6c11ca52bdc13c40c5ac8d8ef56d907e67812a8b111fda1527dfb1358",
-				"dweb:/ipfs/QmUjfL3qL4eTVsZ352dGVxrKiM5JJQGYwvb9UMWVadnVc8"
+				"bzz-raw://c7a759b44437db80dea7c21663dd295de247df496d8eb74d1449eb9a102c06b7",
+				"dweb:/ipfs/QmQmQhACUiGhfYNWajKL2EjPzbCVsEiaeJbUM3sem3TqaD"
 			]
 		}
 	},
