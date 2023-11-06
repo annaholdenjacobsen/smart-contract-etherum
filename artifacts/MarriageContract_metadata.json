@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.18+commit.87f61d96"
+		"version": "0.8.20+commit.a1b79de6"
 	},
 	"language": "Solidity",
 	"output": {
@@ -85,6 +85,19 @@
 				"name": "engage",
 				"outputs": [],
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getCurrentState",
+				"outputs": [
+					{
+						"internalType": "enum MarriageContract.State",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -173,6 +186,34 @@
 			},
 			{
 				"inputs": [],
+				"name": "transitionToAborted",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "transitionToInvalid",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "transitionToRegistered",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "transitionToWed",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "weddingDay",
 				"outputs": [
 					{
@@ -200,7 +241,7 @@
 		"compilationTarget": {
 			"marrige.sol": "MarriageContract"
 		},
-		"evmVersion": "paris",
+		"evmVersion": "shanghai",
 		"libraries": {},
 		"metadata": {
 			"bytecodeHash": "ipfs"
@@ -213,11 +254,11 @@
 	},
 	"sources": {
 		"marrige.sol": {
-			"keccak256": "0x9ff566b8cecff2c9700d779cff7e93153539a6cfa6611c047fad08a7bcfc5e05",
+			"keccak256": "0xe183e5f3b8ac0b0dee9695d76836b07bf4fd649c7ed58434bc2c6e4938b83b59",
 			"license": "none",
 			"urls": [
-				"bzz-raw://1e9ca149c30b332d4252aafae4bf9ea80b593cbf6fd477895c7ec09f675931a0",
-				"dweb:/ipfs/QmdbVpkkJJdVwRvoHLDq7Va6uhmA4tLpPa26eK8Phi59h8"
+				"bzz-raw://7ea8810abf62060ecc9f976a66d202513292b89832d75c060ed5486ffde92a79",
+				"dweb:/ipfs/QmY7NAUEHCA7UzyqYSNBYQJmZk4hXiGnRxAE9RzsKfRNAo"
 			]
 		}
 	},
