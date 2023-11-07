@@ -17,7 +17,7 @@ contract marriage_license is ERC721 {
     uint8 private spouseCounter;
     uint8 private authorizedCounter;
     uint256[] private tokensVoted;
-    uint256 private verifyAddressesToken;
+    uint32 private verifyAddressesToken;
     address[] private authorizedAddresses;
     mapping ( address => uint8[] ) private authorizedVotingList;
     
