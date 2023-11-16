@@ -4,7 +4,7 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract marriage_license is ERC721 {
+contract MarriageLicense is ERC721 {
     // ATTRIBUTES
     uint32 private token1;
     uint32 private token2;
@@ -57,6 +57,16 @@ contract marriage_license is ERC721 {
     
     // d sies at vi skal bruke den over for å disable transferring ved å overskrive men det funka ikke så gjør d som nedenfor istedet maybe
     function TransferFrom() internal virtual {
+        revert("NFT is non-transferable");
+        
+    }
+
+    //OBS FORLSAG FRA EN HJELPENDE VENN
+    function _transfer(
+        address from,
+        address to,
+        uint256 tokenId
+    ) internal virtual override {
         revert("NFT is non-transferable");
     }
 
