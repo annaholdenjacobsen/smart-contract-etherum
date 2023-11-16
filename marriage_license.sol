@@ -61,14 +61,7 @@ contract MarriageLicense is ERC721 {
         
     }
 
-    //OBS FORLSAG FRA EN HJELPENDE VENN
-    function _transfer(
-        address from,
-        address to,
-        uint256 tokenId
-    ) internal virtual override {
-        revert("NFT is non-transferable");
-    }
+  
 
     function createWeddingCertificate() public onlySpouse {
         require(isMarried, "Cannot produce wedding certificate for non-married people");

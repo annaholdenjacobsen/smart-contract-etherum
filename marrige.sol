@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: none
 
-pragma solidity ^0.8.4;
+pragma solidity ^0.8.20;
 
 import "./marriage_license.sol";
 import "./marriage-registry.sol";
@@ -14,12 +14,9 @@ contract MarriageContract {
     // The date and time of the wedding
     //Time is given in hours and minutes
     //You can register a date 179 years ahead in time (REMOVE LATER)
-    struct WeddingDate {
-        uint16 Date;
-        uint16 Time;
-    }
+    
 
-    WeddingDate public weddingDate;
+    uint32 public weddingDate; 
 
     // A mapping that checks if the spouses has agreed to marry
     mapping (address => bool) public spouseSaidIDo;
@@ -38,6 +35,7 @@ contract MarriageContract {
 
     //A list of proposed participations
     address[] public participations;
+
     //A mapping to check if the spouses has confirmed the proposed participations
     mapping (address => bool) public confirmedParticipations;
 
@@ -150,12 +148,18 @@ contract MarriageContract {
 
     modifier onlyUnmarried() {
         //Checks the marriage registry to see if the message sender is already married
-        require(!marriageRegistry.isMarried(msg.sender), "Spouse is already married");    
+        require(marriageRegistry.isMarried(msg.sender) == false, "Spouse is already married");    
     _;
 }
     modifier onlyGuests() {
+        bool isguest;
         //Checks if the message sender is in the participations list, and checks if both spouses had confirmed the list
-        require(participations[msg.sender] && confirmedParticipations[spouse1] && confirmedParticipations[spouse2], "Only confirmed guests can vote");
+        for (uint i = 0; i < participations.length; i++) {
+            if (participations[i] == msg.sender) {
+                isguest = true;
+            }
+        }
+        require(isguest && confirmedParticipations[spouse1] && confirmedParticipations[spouse2], "You are not a guest at this wedding");
         _;
     }
     function validAddress(address _address) private pure returns (bool) {
@@ -166,14 +170,11 @@ contract MarriageContract {
 
     //Spouse 1 proposes to Spouse 2
     //Calldata specifies that you cant change the value within the function
-    function propose(address _spouse2, uint16 _weddingDate, uint16 _weddingTime) external onlyUnmarried {
+    function propose(address _spouse2, uint32 _weddingDate) external onlyUnmarried {
         require(msg.sender != _spouse2, "Cannot marry yourself");
         require(validAddress(_spouse2), "Invalid address");
 
-        weddingDate = WeddingDate({
-            Date: _weddingDate,
-            Time: _weddingTime
-        });
+        weddingDate = _weddingDate;
         spouse1 = msg.sender;
         spouse2 = _spouse2;
 
@@ -204,10 +205,16 @@ contract MarriageContract {
         spouseSaidIDo[msg.sender] = true;
     }
 
+    function getDateFromTimestamp(uint32 timestamp) public pure returns (uint32) {
+        uint32 oneDay = 86400; // Number of seconds in one day
+        uint32 dateOnly = (timestamp / oneDay) * oneDay;
+        return dateOnly;
+}
 
-   function isWeddingDay() private pure returns (bool) {
-    uint256 startOfDay = weddingDate.Date; // assuming weddingDate is the start of the wedding day in Unix timestamp
-    uint256 endOfDay = startOfDay + 1 days;
+
+   function isWeddingDay() private view returns (bool) {
+    uint32 startOfDay = getDateFromTimestamp(weddingDate); // assuming weddingDate is the start of the wedding day in Unix timestamp
+    uint32 endOfDay = startOfDay + 1 days;
 
     // Check if the current timestamp is within the wedding day
     return block.timestamp >= startOfDay && block.timestamp < endOfDay;
