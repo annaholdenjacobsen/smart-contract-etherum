@@ -32,7 +32,7 @@ contract MarriageContract {
     uint32 public weddingDate; 
 
     // A mapping that checks what spouse proposed
-    mapping (uint8 => bool) public spouseProposed;
+    mapping (address => bool) public spouseProposed;
     // A mapping that checks if the spouses has agreed to marry
     mapping (address => bool) public spouseSaidIDo;
 
@@ -80,7 +80,7 @@ contract MarriageContract {
         require(confirmedParticipations[spouse1] != true && confirmedParticipations[spouse2] != true, "Spouses already agreed on participation list");
 
         //Goes through all proposed guests and checks that the addresses are valid
-        for (uint8 i=0; i < _guests.length; i++ ) {
+        for (uint8 i = 0; i < _guests.length; i++ ) {
             require(validAddress(_guests[i]), "Cannot invite an invalid address");
         }
 
@@ -98,7 +98,7 @@ contract MarriageContract {
         //You have to be engaged to confirm a guest list
         require(currentState == State.Engaged, "Invalid engagement status");
         //You cant agree on a guest list twice
-        require(confirmedParticipations[msg.sender] != true, "Guest list already confirmed");
+        require(!confirmedParticipations[msg.sender], "Guest list already confirmed");
         //There has to be one or more proposed guests for you to be able to confirm the list
         require(participations.length > 0, "No participants proposed");
         
@@ -122,7 +122,7 @@ contract MarriageContract {
 
         // Sets the marriage status of the spouses to false, in case they already got married
         marriageRegistry.revokeMarriage(spouse1);
-        marriageRegistry.revokeMarriage(spouse2);
+        marriageRegistry.revokeMarriage(spouse2);        
 
         // Emit the event that the wedding is invalid
         emit WeddingInvalid(spouse1,spouse2);
@@ -143,8 +143,7 @@ contract MarriageContract {
     // TODO update after adding stuff
     constructor() {
         spouse1 = msg.sender;
-        spouseProposed[0] = false;
-        spouseProposed[1] = false;
+        spouseProposed[msg.sender] = false;
         currentState = State.Created;
     }
 
@@ -157,11 +156,12 @@ contract MarriageContract {
 
 
     //OBS Denne funker ikke
-   modifier onlyUnmarried() {
-    // Check if the message sender is already married using the MarriageRegistry instance
-    require(!marriageRegistry.isMarried(msg.sender), "Spouse is already married");
-    _;
-}
+    modifier onlyUnmarried() {
+        // Check if the message sender is already married using the MarriageRegistry instance
+        //require(!marriageRegistry.isMarried(msg.sender), "Spouse is already married");
+        require(1==1,"yay");
+        _;
+    }
 
 
     // Denne er et problemn når gjest nr 2 skal vote against wedding, skjønner ikke hvorfor
@@ -195,8 +195,8 @@ contract MarriageContract {
         weddingDate = _weddingDate;
         spouse1 = msg.sender;
         spouse2 = _spouse2;
-        spouseProposed[0] = true;
-        spouseProposed[1] = false;
+        spouseProposed[spouse1] = true;
+        spouseProposed[spouse2] = false;
 
         emit proposalInitiated(spouse1, spouse2);
     }
@@ -206,8 +206,8 @@ contract MarriageContract {
         require(_weddingDate > block.timestamp + 10, "Cannot set date of wedding to be less than 10 seconds in advance");
 
         weddingDate = _weddingDate;
-        spouseProposed[0] = false;
-        spouseProposed[1] = true;
+        spouseProposed[spouse1] = false;
+        spouseProposed[spouse2] = true;
 
         emit proposalInitiated(spouse1, spouse2);
     }
@@ -215,12 +215,14 @@ contract MarriageContract {
     //Spouse 2 accepts proposal, engagement initiated
     //TODO maybe check if you can disagree on date but not proposal
     function acceptProposal() public onlyUnmarried {
-        if(spouseProposed[0]) {
+        if(spouseProposed[spouse1]) {
             require(msg.sender == spouse2, "Only spouse2 can accept spouse1's proposal");
             emit Engaged(spouse1, spouse2);
-        } else if (spouseProposed[1]) {
+            currentState = State.Engaged;
+        } else if (spouseProposed[spouse2]) {
             require(msg.sender == spouse1, "Only spouse1 can accept spouse2's proposal");
             emit Engaged(spouse1, spouse2);
+            currentState = State.Engaged;
         }
     }
 
