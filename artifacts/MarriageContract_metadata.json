@@ -193,9 +193,9 @@
 				"name": "againstVotes",
 				"outputs": [
 					{
-						"internalType": "uint256",
+						"internalType": "uint16",
 						"name": "",
-						"type": "uint256"
+						"type": "uint16"
 					}
 				],
 				"stateMutability": "view",
@@ -230,19 +230,6 @@
 			{
 				"inputs": [],
 				"name": "currentState",
-				"outputs": [
-					{
-						"internalType": "enum MarriageContract.State",
-						"name": "",
-						"type": "uint8"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "getCurrentState",
 				"outputs": [
 					{
 						"internalType": "enum MarriageContract.State",
@@ -298,7 +285,7 @@
 			},
 			{
 				"inputs": [],
-				"name": "marriageRegistry",
+				"name": "marriageRegistery",
 				"outputs": [
 					{
 						"internalType": "contract MarriageRegistry",
@@ -595,14 +582,6 @@
 				"dweb:/ipfs/QmVBEei6aTnvYNZp2CHYVNKyZS4q1KkjANfY39WVXZXVoT"
 			]
 		},
-		"marriage-registry.sol": {
-			"keccak256": "0x0e3dce95283c18292e049b95a8c2a121542f2458c15f9d451877a437f2e36bab",
-			"license": "none",
-			"urls": [
-				"bzz-raw://92d6b5795eb995bfcf1f7d87d55ab2a8eddbfedb5aa548aaa759ecf257729cb6",
-				"dweb:/ipfs/QmQuWceCyaKesoXkKBmEyLkHjQB3ims7rMvfefrDRdYJXw"
-			]
-		},
 		"marriage_license.sol": {
 			"keccak256": "0xa70d301c9fd615b56c940ba1e08f8fddcc5d8f09058b4eb13d6b5dc3d202c7a8",
 			"license": "none",
@@ -612,11 +591,11 @@
 			]
 		},
 		"marrige.sol": {
-			"keccak256": "0xfde839426148cadfe0029880a991a9610aec3f67b341855bb94e4603c95f5304",
+			"keccak256": "0x80db7dd204d8932220e56121a8089f2371e1b673ca5b4e98228b64273759fbe4",
 			"license": "none",
 			"urls": [
-				"bzz-raw://97f4459fdc72ef1b5917533606cbe1941f4f5be4ec24a3cf0597ba96fc35fd59",
-				"dweb:/ipfs/QmYPjjb33FuX6hS3XcdYsvewahGLdVofJmhKFQMDHeEiFx"
+				"bzz-raw://94e5443ab9c354480a96339872b000e9dd8cfa222c311acbaf855d4d447dbd23",
+				"dweb:/ipfs/QmTPzLzRZLfC3BuvkMDzNZrzpzXXws5cRnK8Q5wXPXSS49"
 			]
 		}
 	},

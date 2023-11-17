@@ -3,7 +3,24 @@
 pragma solidity ^0.8.20;
 
 import "./marriage_license.sol";
-import "./marriage-registry.sol";
+
+// Denne er helt ute å kjøre, får ikke til å aksessere infoen riktig
+contract MarriageRegistry {
+    mapping(address => bool) public marriedAddresses;
+
+    function isMarried(address _address) public view returns (bool) {
+        return marriedAddresses[_address];
+    }
+
+    function setMarriage(address _address) public {
+        marriedAddresses[_address] = true;
+    }
+
+    function revokeMarriage(address _address) public {
+        marriedAddresses[_address] = false;
+    }
+}
+
 
 contract MarriageContract {
 
@@ -12,17 +29,13 @@ contract MarriageContract {
     address public spouse2;
 
     // The date and time of the wedding
-    //Time is given in hours and minutes
-    //You can register a date 179 years ahead in time (REMOVE LATER)
-    
-
     uint32 public weddingDate; 
 
     // A mapping that checks if the spouses has agreed to marry
     mapping (address => bool) public spouseSaidIDo;
 
     // The marrige registry that documents if an adress is married or not
-    MarriageRegistry public marriageRegistry;
+    MarriageRegistry public marriageRegistery;
 
     // The marriage license that distributes wedding certificates
     MarriageLicense public marriegeLicense;
@@ -53,7 +66,7 @@ contract MarriageContract {
     mapping(address => Vote) public guestVotes;
 
     // The sum of all votes against the wedding
-    uint public againstVotes;
+    uint16 public againstVotes;
 
 
 
@@ -72,7 +85,7 @@ contract MarriageContract {
         //Set the participations list to the proposed guests
         participations = _guests;
         //When you propose a guest list you also automatically approve
-        confirmedParticipations[msg.sender] == true;
+        confirmedParticipations[msg.sender] = true;
 
         //Send an event that a guest list is proposed
         emit ParticipationsProposed(_guests);
@@ -106,20 +119,13 @@ contract MarriageContract {
         currentState = State.Invalid;
 
         // Sets the marriage status of the spouses to false, in case they already got married
-        marriageRegistry.revokeMarriage(spouse1);
-        marriageRegistry.revokeMarriage(spouse2);        
+        marriageRegistery.revokeMarriage(spouse1);
+        marriageRegistery.revokeMarriage(spouse2);        
 
         // Emit the event that the wedding is invalid
         emit WeddingInvalid(spouse1,spouse2);
 
     }
-
-
-    // Is this necessary?? Mabye in marrigelicense to check state?
-    function getCurrentState() public view returns (State) {
-        return currentState;
-    }
-
 
     event proposalInitiated(address indexed spouse1, address indexed spouse2);
     event Engaged(address indexed spouse1, address indexed spouse2);
@@ -146,22 +152,30 @@ contract MarriageContract {
         _;
     }
 
-    modifier onlyUnmarried() {
-        //Checks the marriage registry to see if the message sender is already married
-        require(marriageRegistry.isMarried(msg.sender) == false, "Spouse is already married");    
+
+    //OBS Denne funker ikke
+   modifier onlyUnmarried() {
+    // Check if the message sender is already married using the MarriageRegistry instance
+    require(!marriageRegistery.isMarried(msg.sender), "Spouse is already married");
     _;
 }
+
+
+    // Denne er et problemn når gjest nr 2 skal vote against wedding, skjønner ikke hvorfor
     modifier onlyGuests() {
-        bool isguest;
+        bool isguest = false;
         //Checks if the message sender is in the participations list, and checks if both spouses had confirmed the list
-        for (uint i = 0; i < participations.length; i++) {
+        for (uint16 i = 0; i < participations.length; i++) {
             if (participations[i] == msg.sender) {
                 isguest = true;
+                break;
             }
         }
-        require(isguest && confirmedParticipations[spouse1] && confirmedParticipations[spouse2], "You are not a guest at this wedding");
+        require(isguest, "You are not a guest at this wedding");
+        require(confirmedParticipations[spouse1] && confirmedParticipations[spouse2], "You have not been invited by both spouses");
         _;
     }
+
     function validAddress(address _address) private pure returns (bool) {
         return _address != address(0);
     }
@@ -170,7 +184,7 @@ contract MarriageContract {
 
     //Spouse 1 proposes to Spouse 2
     //Calldata specifies that you cant change the value within the function
-    function propose(address _spouse2, uint32 _weddingDate) external onlyUnmarried {
+    function propose(address _spouse2, uint32 _weddingDate) external {
         require(msg.sender != _spouse2, "Cannot marry yourself");
         require(validAddress(_spouse2), "Invalid address");
 
@@ -191,13 +205,12 @@ contract MarriageContract {
         emit EngagementRevoked(spouse1,spouse2);
     }
     //Spouse 2 accepts proposal, engagement initiated
-    //TODO maybe check if you can disagree on date but not proposal
-    function acceptProposal() external onlyUnmarried {
-       
+    function acceptProposal() external {
+       require(msg.sender == spouse2, "Only someone proposed to can accept");
+       currentState = State.Engaged;
         emit Engaged(spouse1, spouse2);
     }
 
-    //TODO Should you be able to refuse?
 
     //Spouse agree to get married
     function sayIDo() public onlySpouse {
@@ -205,13 +218,14 @@ contract MarriageContract {
         spouseSaidIDo[msg.sender] = true;
     }
 
+    // Meg som har køddet rundt aner ikke om det funker
     function getDateFromTimestamp(uint32 timestamp) public pure returns (uint32) {
         uint32 oneDay = 86400; // Number of seconds in one day
         uint32 dateOnly = (timestamp / oneDay) * oneDay;
         return dateOnly;
 }
 
-
+    //TODO fikse denne 
    function isWeddingDay() private view returns (bool) {
     uint32 startOfDay = getDateFromTimestamp(weddingDate); // assuming weddingDate is the start of the wedding day in Unix timestamp
     uint32 endOfDay = startOfDay + 1 days;
@@ -219,6 +233,7 @@ contract MarriageContract {
     // Check if the current timestamp is within the wedding day
     return block.timestamp >= startOfDay && block.timestamp < endOfDay;
 }
+    //Ikke debugga enda pga isWeddingday
     function marry() public onlySpouse {
         //Check that the spouses isEngaged
         require(currentState == State.Engaged, "Both spouses must be engaged to marry");
@@ -236,6 +251,7 @@ contract MarriageContract {
         emit Married(spouse1, spouse2);
     }
 
+    //Funker når første gjest bruker den, failer når nr 2 prøver seg
     function voteAgainstWedding() public onlyGuests {
         require(!guestVotes[msg.sender].hasVoted, "Guest has already voted");
 
