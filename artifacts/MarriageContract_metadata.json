@@ -193,9 +193,9 @@
 				"name": "againstVotes",
 				"outputs": [
 					{
-						"internalType": "uint16",
+						"internalType": "uint256",
 						"name": "",
-						"type": "uint16"
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -228,8 +228,34 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "uint32",
+						"name": "_weddingDate",
+						"type": "uint32"
+					}
+				],
+				"name": "counterProposal",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "currentState",
+				"outputs": [
+					{
+						"internalType": "enum MarriageContract.State",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getCurrentState",
 				"outputs": [
 					{
 						"internalType": "enum MarriageContract.State",
@@ -285,7 +311,7 @@
 			},
 			{
 				"inputs": [],
-				"name": "marriageRegistery",
+				"name": "marriageRegistry",
 				"outputs": [
 					{
 						"internalType": "contract MarriageRegistry",
@@ -401,6 +427,25 @@
 						"internalType": "address",
 						"name": "",
 						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint8",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"name": "spouseProposed",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
 					}
 				],
 				"stateMutability": "view",
@@ -582,6 +627,14 @@
 				"dweb:/ipfs/QmVBEei6aTnvYNZp2CHYVNKyZS4q1KkjANfY39WVXZXVoT"
 			]
 		},
+		"marriage-registry.sol": {
+			"keccak256": "0xcde21baabd427d4bb5e6c52247af005d27cc14cf3b83a5ba6d8c7984c0593875",
+			"license": "none",
+			"urls": [
+				"bzz-raw://70818ad03989604f6cf6940e74e3297bfd93b10c9a9eac2c41f7d5078e16dc61",
+				"dweb:/ipfs/QmWTnbLzP8nqA48ghbb7LDNHu8mbp35TYUSWA4enspVMJi"
+			]
+		},
 		"marriage_license.sol": {
 			"keccak256": "0xa70d301c9fd615b56c940ba1e08f8fddcc5d8f09058b4eb13d6b5dc3d202c7a8",
 			"license": "none",
@@ -591,11 +644,11 @@
 			]
 		},
 		"marrige.sol": {
-			"keccak256": "0x80db7dd204d8932220e56121a8089f2371e1b673ca5b4e98228b64273759fbe4",
+			"keccak256": "0xdd7c25b5ac5a8e05e86f053363e94ee90e94e1b591d4a40159a80eb01883a16e",
 			"license": "none",
 			"urls": [
-				"bzz-raw://94e5443ab9c354480a96339872b000e9dd8cfa222c311acbaf855d4d447dbd23",
-				"dweb:/ipfs/QmTPzLzRZLfC3BuvkMDzNZrzpzXXws5cRnK8Q5wXPXSS49"
+				"bzz-raw://ed24fda0242182d67e99c6c019855e919de00e0eafdce37602e298ff6725bd79",
+				"dweb:/ipfs/QmaZmZYesJf3ojg5qsvB14wconFTHbzirXud2vmcDUhA4k"
 			]
 		}
 	},

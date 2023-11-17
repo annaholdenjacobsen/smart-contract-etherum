@@ -78,7 +78,7 @@ contract MarriageLicense is ERC721 {
 
     function authorizeAccounts(address authorizeAddress) public onlySpouse {
         // Check that an account is not being re-authorized
-        for(uint8 i = 0; i < 3; i++) {
+        for (uint8 i = 0; i < 3; i++) {
             require(authorizedAddresses[i] != authorizeAddress, "Cannot re-authorize an address");
         }
 
@@ -129,7 +129,7 @@ contract MarriageLicense is ERC721 {
                 spouseCounter += 1;
             }
             else {
-                for(uint8 i = 0; i < 3; i++) {
+                for (uint8 i = 0; i < 3; i++) {
                     if (sender == authorizedAddresses[i]) {
                         authorizedCounter += 1;
                     }
