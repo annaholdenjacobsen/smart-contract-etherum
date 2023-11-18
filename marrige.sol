@@ -52,7 +52,7 @@ contract MarriageContract {
     address[] public participations;
 
     //A mapping to check if the spouses has confirmed the proposed participations
-    mapping (address => bool) public confirmedParticipations;
+    mapping (address => bool) public spouseConfirmedGuests;
 
 
     uint16 public votingDeadline;
@@ -68,7 +68,7 @@ contract MarriageContract {
     mapping(address => Vote) public guestVotes;
 
     // The sum of all votes against the wedding
-    uint16 public againstVotes;
+    uint8 public againstVotes;
 
 
 
@@ -77,17 +77,18 @@ contract MarriageContract {
         //You need to be engaged to propose guests
         require(currentState == State.Engaged, "Invalid engagement status");
         //You cannot propose a new list if you have already agreed on a guest list
-        require(confirmedParticipations[spouse1] != true && confirmedParticipations[spouse2] != true, "Spouses already agreed on participation list");
+        require(spouseConfirmedGuests[spouse1] != true && spouseConfirmedGuests[spouse2] != true, "Spouses already agreed on participation list");
 
         //Goes through all proposed guests and checks that the addresses are valid
         for (uint8 i = 0; i < _guests.length; i++ ) {
             require(validAddress(_guests[i]), "Cannot invite an invalid address");
+        
         }
 
-        //Set the participations list to the proposed guests
         participations = _guests;
+
         //When you propose a guest list you also automatically approve
-        confirmedParticipations[msg.sender] = true;
+        spouseConfirmedGuests[msg.sender] = true;
 
         //Send an event that a guest list is proposed
         emit ParticipationsProposed(_guests);
@@ -98,12 +99,12 @@ contract MarriageContract {
         //You have to be engaged to confirm a guest list
         require(currentState == State.Engaged, "Invalid engagement status");
         //You cant agree on a guest list twice
-        require(!confirmedParticipations[msg.sender], "Guest list already confirmed");
+        require(!spouseConfirmedGuests[msg.sender], "Guest list already confirmed");
         //There has to be one or more proposed guests for you to be able to confirm the list
         require(participations.length > 0, "No participants proposed");
         
         //Spouse confirms the list
-        confirmedParticipations[msg.sender] = true;
+        spouseConfirmedGuests[msg.sender] = true;
 
         //Guests invited
         emit ParticipationsInvited(participations);
@@ -116,13 +117,13 @@ contract MarriageContract {
     function InvalidateWedding() private {
         //The wedding cant be in the aborted state
         require(currentState != State.Aborted, "invalid state transition");
+        require(isWeddingDay(), "Cant invalidate a wedding unless its the wedding day");
 
         // Set the state of the marriage to invalid
         currentState = State.Invalid;
 
         // Sets the marriage status of the spouses to false, in case they already got married
-        marriageRegistry.revokeMarriage(spouse1);
-        marriageRegistry.revokeMarriage(spouse2);        
+         
 
         // Emit the event that the wedding is invalid
         emit WeddingInvalid(spouse1,spouse2);
@@ -175,7 +176,7 @@ contract MarriageContract {
             }
         }
         require(isguest, "You are not a guest at this wedding");
-        require(confirmedParticipations[spouse1] && confirmedParticipations[spouse2], "You have not been invited by both spouses");
+        require(spouseConfirmedGuests[spouse1] && spouseConfirmedGuests[spouse2], "You have not been invited by both spouses");
         _;
     }
 
@@ -187,7 +188,8 @@ contract MarriageContract {
 
     //Spouse 1 proposes to Spouse 2
     //Calldata specifies that you cant change the value within the function
-    function propose(address _spouse2, uint32 _weddingDate) external {
+    function propose(address _spouse2, uint32 _weddingDate) public {
+        require(currentState != State.Aborted || currentState != State.Invalid, "If your marriage is invalid or aborted you cant get married again");
         require(msg.sender != _spouse2, "Cannot marry yourself");
         require(validAddress(_spouse2), "Invalid address");
         require(_weddingDate > block.timestamp + 10, "Cannot set date of wedding to be less than 10 seconds in advance");
@@ -201,7 +203,7 @@ contract MarriageContract {
         emit proposalInitiated(spouse1, spouse2);
     }
 
-    function counterProposal(uint32 _weddingDate) external onlyUnmarried {
+    function counterProposal(uint32 _weddingDate) public onlyUnmarried {
         require(msg.sender == spouse2, "Someone other than spouse2 cannot propose a new wedding date");
         require(_weddingDate > block.timestamp + 10, "Cannot set date of wedding to be less than 10 seconds in advance");
 
@@ -277,11 +279,12 @@ contract MarriageContract {
     }
 
     //Funker når første gjest bruker den, failer når nr 2 prøver seg
-    function voteAgainstWedding() public onlyGuests {
+    function voteAgainstWedding() public {
         require(!guestVotes[msg.sender].hasVoted, "Guest has already voted");
-        require(currentState == State.Wed, "Cannot stop a marriage that does not exist");
+        require(currentState == State.Wed || currentState == State.Engaged, "Cannot stop a marriage that does not exist");
         require(isWeddingDay(), "Speak on the wedding day or forever hold your peace");
-
+        
+       
         guestVotes[msg.sender] = Vote(true, true);
         againstVotes++;
 
