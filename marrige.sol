@@ -32,9 +32,9 @@ contract MarriageContract {
     uint32 public weddingDate; 
 
     // A mapping that checks what spouse proposed
-    mapping (address => bool) public spouseProposed;
+    mapping (address => bool) private spouseProposed;
     // A mapping that checks if the spouses has agreed to marry
-    mapping (address => bool) public spouseSaidIDo;
+    mapping (address => bool) private spouseSaidIDo;
 
     // The marrige registry that documents if an adress is married or not
     MarriageRegistry public marriageRegistry;
@@ -52,25 +52,15 @@ contract MarriageContract {
     address[] public participations;
 
     //A mapping to check if the spouses has confirmed the proposed participations
-    mapping (address => bool) public spouseConfirmedGuests;
-
-
-    uint16 public votingDeadline;
-
+    mapping (address => bool) private spouseConfirmedGuests;
 
     // A vote object that checks if a guest already have voted, and if they vote against the wedding
-    struct Vote {
-        bool hasVoted;
-        bool voteAgainst;
-    }
 
     // An overview of all guests and their votes
-    mapping(address => Vote) public guestVotes;
+    mapping(address => bool) public guestVoted;
 
     // The sum of all votes against the wedding
     uint8 public againstVotes;
-
-
 
     //Propose participants
     function proposeParticipations(address[] memory _guests) public onlySpouse {
@@ -82,7 +72,6 @@ contract MarriageContract {
         //Goes through all proposed guests and checks that the addresses are valid
         for (uint8 i = 0; i < _guests.length; i++ ) {
             require(validAddress(_guests[i]), "Cannot invite an invalid address");
-        
         }
 
         participations = _guests;
@@ -280,12 +269,12 @@ contract MarriageContract {
 
     //Funker når første gjest bruker den, failer når nr 2 prøver seg
     function voteAgainstWedding() public {
-        require(!guestVotes[msg.sender].hasVoted, "Guest has already voted");
+        require(!guestVoted[msg.sender], "Guest has already voted");
         require(currentState == State.Wed || currentState == State.Engaged, "Cannot stop a marriage that does not exist");
         require(isWeddingDay(), "Speak on the wedding day or forever hold your peace");
         
        
-        guestVotes[msg.sender] = Vote(true, true);
+        guestVoted[msg.sender] = true;
         againstVotes++;
 
         if (againstVotes > participations.length / 2) {
