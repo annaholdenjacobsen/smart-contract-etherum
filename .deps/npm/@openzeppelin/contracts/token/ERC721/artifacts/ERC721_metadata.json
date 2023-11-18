@@ -9,17 +9,6 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "_marriageRegistryAddress",
-						"type": "address"
-					}
-				],
-				"stateMutability": "nonpayable",
-				"type": "constructor"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
 						"name": "sender",
 						"type": "address"
 					},
@@ -195,25 +184,6 @@
 				"type": "event"
 			},
 			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "spouse1",
-						"type": "address"
-					},
-					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "spouse2",
-						"type": "address"
-					}
-				],
-				"name": "weddingCertificateIssued",
-				"type": "event"
-			},
-			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -248,53 +218,6 @@
 					}
 				],
 				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "spouse1",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "spouse2",
-						"type": "address"
-					}
-				],
-				"name": "createWeddingCertificate",
-				"outputs": [
-					{
-						"internalType": "uint32[2]",
-						"name": "",
-						"type": "uint32[2]"
-					}
-				],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_spouse1",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_spouse2",
-						"type": "address"
-					},
-					{
-						"internalType": "uint32[2]",
-						"name": "_tokens",
-						"type": "uint32[2]"
-					}
-				],
-				"name": "divorce",
-				"outputs": [],
-				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -517,6 +440,7 @@
 			}
 		],
 		"devdoc": {
+			"details": "Implementation of https://eips.ethereum.org/EIPS/eip-721[ERC721] Non-Fungible Token Standard, including the Metadata extension, but not including the Enumerable extension, which is available separately as {ERC721Enumerable}.",
 			"errors": {
 				"ERC721IncorrectOwner(address,uint256,address)": [
 					{
@@ -605,6 +529,9 @@
 				"balanceOf(address)": {
 					"details": "See {IERC721-balanceOf}."
 				},
+				"constructor": {
+					"details": "Initializes the contract by setting a `name` and a `symbol` to the token collection."
+				},
 				"getApproved(uint256)": {
 					"details": "See {IERC721-getApproved}."
 				},
@@ -649,7 +576,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"marriage_license.sol": "MarriageLicense"
+			".deps/npm/@openzeppelin/contracts/token/ERC721/ERC721.sol": "ERC721"
 		},
 		"evmVersion": "shanghai",
 		"libraries": {},
@@ -663,15 +590,7 @@
 		"remappings": []
 	},
 	"sources": {
-		"@openzeppelin/contracts/access/Ownable.sol": {
-			"keccak256": "0xff6d0bb2e285473e5311d9d3caacb525ae3538a80758c10649a4d61029b017bb",
-			"license": "MIT",
-			"urls": [
-				"bzz-raw://8ed324d3920bb545059d66ab97d43e43ee85fd3bd52e03e401f020afb0b120f6",
-				"dweb:/ipfs/QmfEckWLmZkDDcoWrkEvMWhms66xwTLff9DDhegYpvHo1a"
-			]
-		},
-		"@openzeppelin/contracts/interfaces/draft-IERC6093.sol": {
+		".deps/npm/@openzeppelin/contracts/interfaces/draft-IERC6093.sol": {
 			"keccak256": "0x60c65f701957fdd6faea1acb0bb45825791d473693ed9ecb34726fdfaa849dd7",
 			"license": "MIT",
 			"urls": [
@@ -679,7 +598,7 @@
 				"dweb:/ipfs/QmcLLJppxKeJWqHxE2CUkcfhuRTgHSn8J4kijcLa5MYhSt"
 			]
 		},
-		"@openzeppelin/contracts/token/ERC721/ERC721.sol": {
+		".deps/npm/@openzeppelin/contracts/token/ERC721/ERC721.sol": {
 			"keccak256": "0x13dd061770956c8489b80cfc89d9cdfc8ea2783d953691ea037a380731d52784",
 			"license": "MIT",
 			"urls": [
@@ -687,7 +606,7 @@
 				"dweb:/ipfs/QmUtm9bQGvjr9hHGwkPWrbgFmVqzaJcxjkaYDex2oGsonS"
 			]
 		},
-		"@openzeppelin/contracts/token/ERC721/IERC721.sol": {
+		".deps/npm/@openzeppelin/contracts/token/ERC721/IERC721.sol": {
 			"keccak256": "0x5ef46daa3b58ef2702279d514780316efaa952915ee1aa3396f041ee2982b0b4",
 			"license": "MIT",
 			"urls": [
@@ -695,7 +614,7 @@
 				"dweb:/ipfs/QmPV4ZS4tPVv4mTCf9ejyZ1ai57EEibDRj7mN2ARDCLV5n"
 			]
 		},
-		"@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol": {
+		".deps/npm/@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol": {
 			"keccak256": "0x7f7a26306c79a65fb8b3b6c757cd74660c532cd8a02e165488e30027dd34ca49",
 			"license": "MIT",
 			"urls": [
@@ -703,7 +622,7 @@
 				"dweb:/ipfs/QmWBAn6y2D1xgftci97Z3qR9tQnkvwQpYwFwkTvDMvqU4i"
 			]
 		},
-		"@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol": {
+		".deps/npm/@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol": {
 			"keccak256": "0x37d1aaaa5a2908a09e9dcf56a26ddf762ecf295afb5964695937344fc6802ce1",
 			"license": "MIT",
 			"urls": [
@@ -711,7 +630,7 @@
 				"dweb:/ipfs/Qmbwp8VDerjS5SV1quwHH1oMXxPQ93fzfLVqJ2RCqbowGE"
 			]
 		},
-		"@openzeppelin/contracts/utils/Context.sol": {
+		".deps/npm/@openzeppelin/contracts/utils/Context.sol": {
 			"keccak256": "0x75a4ee64c68dbd5f38bddd06e664a64c8271b4caa554fb6f0607dfd672bb4bf3",
 			"license": "MIT",
 			"urls": [
@@ -719,7 +638,7 @@
 				"dweb:/ipfs/QmNgFkoXNWoUbAyw71rr1sKQ95Rj2GfvYiWg79xEYDn2NY"
 			]
 		},
-		"@openzeppelin/contracts/utils/Strings.sol": {
+		".deps/npm/@openzeppelin/contracts/utils/Strings.sol": {
 			"keccak256": "0x55f102ea785d8399c0e58d1108e2d289506dde18abc6db1b7f68c1f9f9bc5792",
 			"license": "MIT",
 			"urls": [
@@ -727,7 +646,7 @@
 				"dweb:/ipfs/QmZEeeXoFPW47amyP35gfzomF9DixqqTEPwzBakv6cZw6i"
 			]
 		},
-		"@openzeppelin/contracts/utils/introspection/ERC165.sol": {
+		".deps/npm/@openzeppelin/contracts/utils/introspection/ERC165.sol": {
 			"keccak256": "0x9e8778b14317ba9e256c30a76fd6c32b960af621987f56069e1e819c77c6a133",
 			"license": "MIT",
 			"urls": [
@@ -735,7 +654,7 @@
 				"dweb:/ipfs/QmZFdC626GButBApwDUvvTnUzdinevC3B24d7yyh57XkiA"
 			]
 		},
-		"@openzeppelin/contracts/utils/introspection/IERC165.sol": {
+		".deps/npm/@openzeppelin/contracts/utils/introspection/IERC165.sol": {
 			"keccak256": "0x4296879f55019b23e135000eb36896057e7101fb7fb859c5ef690cf14643757b",
 			"license": "MIT",
 			"urls": [
@@ -743,7 +662,7 @@
 				"dweb:/ipfs/QmeJQCtZrQjtJLr6u7ZHWeH3pBnjtLWzvRrKViAi7UZqxL"
 			]
 		},
-		"@openzeppelin/contracts/utils/math/Math.sol": {
+		".deps/npm/@openzeppelin/contracts/utils/math/Math.sol": {
 			"keccak256": "0x005ec64c6313f0555d59e278f9a7a5ab2db5bdc72a027f255a37c327af1ec02d",
 			"license": "MIT",
 			"urls": [
@@ -751,28 +670,12 @@
 				"dweb:/ipfs/QmQyRpyPRL5SQuAgj6SHmbir3foX65FJjbVTTQrA2EFg6L"
 			]
 		},
-		"@openzeppelin/contracts/utils/math/SignedMath.sol": {
+		".deps/npm/@openzeppelin/contracts/utils/math/SignedMath.sol": {
 			"keccak256": "0x5f7e4076e175393767754387c962926577f1660dd9b810187b9002407656be72",
 			"license": "MIT",
 			"urls": [
 				"bzz-raw://7d533a1c97cd43a57cd9c465f7ee8dd0e39ae93a8fb8ff8e5303a356b081cdcc",
 				"dweb:/ipfs/QmVBEei6aTnvYNZp2CHYVNKyZS4q1KkjANfY39WVXZXVoT"
-			]
-		},
-		"marriage-registry.sol": {
-			"keccak256": "0x2e6f0a44c7dd1ae4e5b537a99d0e09212631e574fac95ee03c573ae4737c8912",
-			"license": "none",
-			"urls": [
-				"bzz-raw://2f6f2db59b36337926fd43feb472ece77eda0fe8acff1bf0695e48fdef87820e",
-				"dweb:/ipfs/QmY8C4S9mzkXwFFBvcmTm4AJopA37X8jUPWabuNPeUXHPY"
-			]
-		},
-		"marriage_license.sol": {
-			"keccak256": "0x60a7e4c3644b35f19d43d2c8a75d534cafe5b98397ccaca1f245619abadc9d99",
-			"license": "none",
-			"urls": [
-				"bzz-raw://52b19698b231e7e7d35267fa35ae93c4dfff06ea7d72113920161fbded0d2648",
-				"dweb:/ipfs/QmefoWvUT3AtqMag7ea4H99dhgy2sf33CHDr7FnNN44zBK"
 			]
 		}
 	},
