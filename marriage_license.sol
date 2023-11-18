@@ -5,48 +5,30 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract MarriageLicense is ERC721 {
-    // ATTRIBUTES
+    // ATTRIBUTES    
     uint32 private token1;
     uint32 private token2;
-    
+
     address private spouse1;
     address private spouse2;
     bool public isMarried;
-    uint16 public weddingDay;
+    uint256 public weddingDay;
 
     uint8 private spouseCounter;
     uint8 private authorizedCounter;
     uint256[] private tokensVoted;
-    uint32 private verifyAddressesToken;
-    address[] private authorizedAddresses;
+    mapping (address => bool ) private authorizedAddresses;
     mapping ( address => uint8[] ) private authorizedVotingList;
     
     // Have a constructor for setting up important details regarding the marriage license
-    constructor(address spouse, 
-                bool marriageStatus, 
-                uint16 weddingDate) 
-                ERC721("Wedding", "wed") {
+    constructor() ERC721("Wedding", "wed") {
         spouse1 = msg.sender;
-        spouse2 = spouse;
-        weddingDay = weddingDate;
-        isMarried = marriageStatus;
 
         spouseCounter = 0;
-        authorizedCounter = 0; 
-        verifyAddressesToken = 0;
-        token1 = 50;
-        token2 = 51;
+        authorizedCounter = 0;
     }
 
     IERC721 nftContract = IERC721(this);
-
-    // STATE HANDLING
-    event Divorce(address indexed spouse1, address indexed spouse2);
-
-    modifier onlySpouse() {
-        require(msg.sender == spouse1 || msg.sender == spouse2, "Only spouses can call this function");
-        _;
-    }
 
     // FUNCTIONALITY
     // Disable transfer-functionality
@@ -61,26 +43,40 @@ contract MarriageLicense is ERC721 {
         
     }
 
-  
-
-    function createWeddingCertificate() public onlySpouse {
+    function createWeddingCertificate(uint32 _token1, uint32 _token2) public {
         require(isMarried, "Cannot produce wedding certificate for non-married people");
-        require(nftContract.ownerOf(token1) == spouse1 || nftContract.ownerOf(token2) == spouse2,"Cannot create another wedding certificate when one exists for these spouses");
+        require(nftContract.ownerOf(hashToken(token1)) == spouse1 || nftContract.ownerOf(hashToken(token2)) == spouse2,"Cannot create another wedding certificate when one exists for these spouses");
         
         // Create the token IDs
-        token1 += 1;
-        token2 += 1;
+        token1 = _token1;
+        token2 = _token2;
+        
 
         // Create the wedding certificates
-        _mint(spouse1, token1);
-        _mint(spouse2, token2);
+        _mint(spouse1, hashToken(token1));
+        _mint(spouse2, hashToken(token2));
     }
 
-    function authorizeAccounts(address authorizeAddress) public onlySpouse {
+    function hashToken(uint32 token) internal pure returns (uint256) {
+        return uint256(keccak256(abi.encode(token)));
+    }
+
+    function setSpouses(address _spouse1, address _spouse2) public {
+        spouse1 = _spouse1;
+        spouse2 = _spouse2;
+    }
+
+    function setMarriageStatus(bool status) public {
+        isMarried = status;
+    }
+
+    function getMarriageStatus() view public returns (bool) {
+        return isMarried;
+    }
+
+    function authorizeAccounts(address authorizeAddress, uint8 tokenId) public {
         // Check that an account is not being re-authorized
-        for (uint8 i = 0; i < 3; i++) {
-            require(authorizedAddresses[i] != authorizeAddress, "Cannot re-authorize an address");
-        }
+        require(!authorizedAddresses[authorizeAddress], "Cannot re-authorize an address");
 
         // Check which of the spouses just voted on the address
         if(msg.sender == spouse1) {
@@ -91,25 +87,23 @@ contract MarriageLicense is ERC721 {
 
         // Check that both spouses have voted for authorizing the address, and if they have: create a token for voting for the address
         if(authorizedVotingList[authorizeAddress][0]+authorizedVotingList[authorizeAddress][1] == 2) {
-            verifyAddressesToken += 1;
-            authorizedAddresses.push(authorizeAddress);
+            authorizedAddresses[authorizeAddress] = true;
 
-            _mint(authorizeAddress, verifyAddressesToken);
+            _mint(authorizeAddress, hashToken(tokenId));
         }
     }
 
-    function divorce(uint256 tokenId) public onlySpouse {
+    function divorce(uint32 tokenId) public {
         require(isMarried, "Non-married people cannot divorce");
-        bool enoughParticipantsVoted = enoughParticipantsVote(tokenId, msg.sender);
+        bool enoughParticipantsVoted = enoughParticipantsVote(hashToken(tokenId), msg.sender);
         require(enoughParticipantsVoted, "Not enough participants agree to the divorce");
 
         // Burn the certificates
-        _burn(token1);
-        _burn(token2);
+        _burn(hashToken(token1));
+        _burn(hashToken(token2));
 
         // Update status
-        isMarried = false;
-        emit Divorce(spouse1, spouse2);
+        setMarriageStatus(false);
     }
 
     function enoughParticipantsVote(uint256 token, address sender) internal returns (bool) {
@@ -129,10 +123,8 @@ contract MarriageLicense is ERC721 {
                 spouseCounter += 1;
             }
             else {
-                for (uint8 i = 0; i < 3; i++) {
-                    if (sender == authorizedAddresses[i]) {
-                        authorizedCounter += 1;
-                    }
+                if (authorizedAddresses[sender]) {
+                    authorizedCounter += 1;
                 }
             }
         }

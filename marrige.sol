@@ -3,23 +3,7 @@
 pragma solidity ^0.8.20;
 
 import "./marriage_license.sol";
-
-// Denne er helt ute å kjøre, får ikke til å aksessere infoen riktig
-contract MarriageRegistry {
-    mapping(address => bool) public marriedAddresses;
-
-    function isMarried(address _address) public view returns (bool) {
-        return marriedAddresses[_address];
-    }
-
-    function setMarriage(address _address) public {
-        marriedAddresses[_address] = true;
-    }
-
-    function revokeMarriage(address _address) public {
-        marriedAddresses[_address] = false;
-    }
-}
+import "./marriage-registry.sol";
 
 
 contract MarriageContract {
@@ -40,7 +24,7 @@ contract MarriageContract {
     MarriageRegistry public marriageRegistry;
 
     // The marriage license that distributes wedding certificates
-    MarriageLicense public marriegeLicense;
+    MarriageLicense public marriageLicense;
 
     // Possible states in the smart contract
     enum State {Created, Engaged, Aborted, Wed, Invalid}
@@ -113,7 +97,8 @@ contract MarriageContract {
 
         // Sets the marriage status of the spouses to false, in case they already got married
          
-
+        marriageRegistry.revokeMarriage(spouse1);
+        marriageRegistry.revokeMarriage(spouse2);
         // Emit the event that the wedding is invalid
         emit WeddingInvalid(spouse1,spouse2);
 
@@ -126,15 +111,18 @@ contract MarriageContract {
     event WeddingCompleted(address indexed spouse1, address indexed spouse2);
     event WeddingInvalid(address indexed spouse1, address indexed spouse2);
     event WeddingCertificateIssued(uint256 indexed engagementId, address indexed spouse1, address indexed spouse2, string ipfsHash);
+    event Divorce(address indexed spouse1, address indexed spouse2);
 
     event ParticipationsInvited(address[] participants);
     event ParticipationsProposed(address[] participants);
 
     // TODO update after adding stuff
-    constructor() {
+    constructor(address _marriageRegistryAddress, address _marriageLicenseAddress) {
         spouse1 = msg.sender;
         spouseProposed[msg.sender] = false;
         currentState = State.Created;
+        marriageRegistry = MarriageRegistry(_marriageRegistryAddress);
+        marriageLicense = MarriageLicense(_marriageLicenseAddress);
     }
 
 
@@ -148,8 +136,7 @@ contract MarriageContract {
     //OBS Denne funker ikke
     modifier onlyUnmarried() {
         // Check if the message sender is already married using the MarriageRegistry instance
-        //require(!marriageRegistry.isMarried(msg.sender), "Spouse is already married");
-        require(1==1,"yay");
+        require(!marriageRegistry.isMarried(msg.sender), "Spouse is already married");
         _;
     }
 
@@ -234,7 +221,7 @@ contract MarriageContract {
     }
 
     // Meg som har køddet rundt aner ikke om det funker
-    function getDateFromTimestamp(uint32 timestamp) public pure returns (uint32) {
+    function getDateFromTimestamp(uint32 timestamp) internal pure returns (uint32) {
         uint32 oneDay = 86400; // Number of seconds in one day
         uint32 dateOnly = (timestamp / oneDay) * oneDay;
         return dateOnly;
@@ -249,31 +236,47 @@ contract MarriageContract {
         return block.timestamp >= startOfDay && block.timestamp < endOfDay;
     }
 
-    //Ikke debugga enda pga isWeddingday
-    function marry() public onlySpouse {
+    function marry(uint32 token1, uint32 token2) public onlySpouse {
         //Check that the spouses isEngaged
         require(currentState == State.Engaged, "Both spouses must be engaged to marry");
         //Check that both spouses said I do
         require(spouseSaidIDo[spouse1] && spouseSaidIDo[spouse2], "Both spouses must say I do to get married");
         //Check that it is the wedding day
-        require(isWeddingDay(), "Cant get married if its not your wedding day");
+        require(isWeddingDay(), "Can't get married if its not your wedding day");
 
-        //Update engaged and married status
+        // Update engaged and married status
         currentState = State.Wed;
 
-        //TODO create marriage license
+        // Set marriage status in the registry
+        marriageRegistry.setMarriage(spouse1);
+        marriageRegistry.setMarriage(spouse2);
+
+        // Create marriage license
+        marriageLicense.setMarriageStatus(true);
+        marriageLicense.setSpouses(spouse1, spouse2);
+        marriageLicense.createWeddingCertificate(token1, token2);
       
         //Emit married event
         emit Married(spouse1, spouse2);
     }
 
-    //Funker når første gjest bruker den, failer når nr 2 prøver seg
+    function divorce(uint32 tokenId) public {
+        marriageLicense.divorce(tokenId);
+        if(!marriageLicense.getMarriageStatus()) {
+            emit Divorce(spouse1, spouse2);
+            currentState = State.Aborted;
+        }
+    }
+
+    function authorizeUsers(address user, uint8 token) public {
+        marriageLicense.authorizeAccounts(user, token);
+    }
+
     function voteAgainstWedding() public {
         require(!guestVoted[msg.sender], "Guest has already voted");
         require(currentState == State.Wed || currentState == State.Engaged, "Cannot stop a marriage that does not exist");
         require(isWeddingDay(), "Speak on the wedding day or forever hold your peace");
-        
-       
+               
         guestVoted[msg.sender] = true;
         againstVotes++;
 

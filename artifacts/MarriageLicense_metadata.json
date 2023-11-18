@@ -6,23 +6,7 @@
 	"output": {
 		"abi": [
 			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "spouse",
-						"type": "address"
-					},
-					{
-						"internalType": "bool",
-						"name": "marriageStatus",
-						"type": "bool"
-					},
-					{
-						"internalType": "uint16",
-						"name": "weddingDate",
-						"type": "uint16"
-					}
-				],
+				"inputs": [],
 				"stateMutability": "nonpayable",
 				"type": "constructor"
 			},
@@ -185,25 +169,6 @@
 					{
 						"indexed": true,
 						"internalType": "address",
-						"name": "spouse1",
-						"type": "address"
-					},
-					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "spouse2",
-						"type": "address"
-					}
-				],
-				"name": "Divorce",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": true,
-						"internalType": "address",
 						"name": "from",
 						"type": "address"
 					},
@@ -247,6 +212,11 @@
 						"internalType": "address",
 						"name": "authorizeAddress",
 						"type": "address"
+					},
+					{
+						"internalType": "uint8",
+						"name": "tokenId",
+						"type": "uint8"
 					}
 				],
 				"name": "authorizeAccounts",
@@ -274,7 +244,18 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
+				"inputs": [
+					{
+						"internalType": "uint32",
+						"name": "_token1",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_token2",
+						"type": "uint32"
+					}
+				],
 				"name": "createWeddingCertificate",
 				"outputs": [],
 				"stateMutability": "nonpayable",
@@ -283,9 +264,9 @@
 			{
 				"inputs": [
 					{
-						"internalType": "uint256",
+						"internalType": "uint32",
 						"name": "tokenId",
-						"type": "uint256"
+						"type": "uint32"
 					}
 				],
 				"name": "divorce",
@@ -307,6 +288,19 @@
 						"internalType": "address",
 						"name": "",
 						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getMarriageStatus",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
 					}
 				],
 				"stateMutability": "view",
@@ -453,6 +447,37 @@
 			{
 				"inputs": [
 					{
+						"internalType": "bool",
+						"name": "status",
+						"type": "bool"
+					}
+				],
+				"name": "setMarriageStatus",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_spouse1",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_spouse2",
+						"type": "address"
+					}
+				],
+				"name": "setSpouses",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "bytes4",
 						"name": "interfaceId",
 						"type": "bytes4"
@@ -529,9 +554,9 @@
 				"name": "weddingDay",
 				"outputs": [
 					{
-						"internalType": "uint16",
+						"internalType": "uint256",
 						"name": "",
-						"type": "uint16"
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -782,11 +807,11 @@
 			]
 		},
 		"marriage_license.sol": {
-			"keccak256": "0xa70d301c9fd615b56c940ba1e08f8fddcc5d8f09058b4eb13d6b5dc3d202c7a8",
+			"keccak256": "0x80506829d7c24b5cf13815700b451630f65039e8ef4f535a1efdfde4cdb73601",
 			"license": "none",
 			"urls": [
-				"bzz-raw://543c2c3cc5495da606b0f5eca1859054cec4f91190c1a7ce0df9086e9b1d0096",
-				"dweb:/ipfs/QmRmxZteDdixf2PgoXj152pZADtcATeqRDqWJbHxfphdK2"
+				"bzz-raw://db0b94fa43a88106861df6e8506061eba937841973ccf83122be4806ec68ae3a",
+				"dweb:/ipfs/QmdiuSrpToq8xVdQfxvdVpZxkUDC2aY8oFY3YNsAdFwiF8"
 			]
 		}
 	},

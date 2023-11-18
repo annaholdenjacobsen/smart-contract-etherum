@@ -193,9 +193,9 @@
 				"name": "againstVotes",
 				"outputs": [
 					{
-						"internalType": "uint256",
+						"internalType": "uint16",
 						"name": "",
-						"type": "uint256"
+						"type": "uint16"
 					}
 				],
 				"stateMutability": "view",
@@ -243,19 +243,6 @@
 			{
 				"inputs": [],
 				"name": "currentState",
-				"outputs": [
-					{
-						"internalType": "enum MarriageContract.State",
-						"name": "",
-						"type": "uint8"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "getCurrentState",
 				"outputs": [
 					{
 						"internalType": "enum MarriageContract.State",
@@ -435,9 +422,9 @@
 			{
 				"inputs": [
 					{
-						"internalType": "uint8",
+						"internalType": "address",
 						"name": "",
-						"type": "uint8"
+						"type": "address"
 					}
 				],
 				"name": "spouseProposed",
@@ -627,28 +614,20 @@
 				"dweb:/ipfs/QmVBEei6aTnvYNZp2CHYVNKyZS4q1KkjANfY39WVXZXVoT"
 			]
 		},
-		"marriage-registry.sol": {
-			"keccak256": "0xcde21baabd427d4bb5e6c52247af005d27cc14cf3b83a5ba6d8c7984c0593875",
-			"license": "none",
-			"urls": [
-				"bzz-raw://70818ad03989604f6cf6940e74e3297bfd93b10c9a9eac2c41f7d5078e16dc61",
-				"dweb:/ipfs/QmWTnbLzP8nqA48ghbb7LDNHu8mbp35TYUSWA4enspVMJi"
-			]
-		},
 		"marriage_license.sol": {
-			"keccak256": "0xa70d301c9fd615b56c940ba1e08f8fddcc5d8f09058b4eb13d6b5dc3d202c7a8",
+			"keccak256": "0x102a830a502d64092d787e3be4e6b81728d62ba9f0506e9efa31ff7010cd9baf",
 			"license": "none",
 			"urls": [
-				"bzz-raw://543c2c3cc5495da606b0f5eca1859054cec4f91190c1a7ce0df9086e9b1d0096",
-				"dweb:/ipfs/QmRmxZteDdixf2PgoXj152pZADtcATeqRDqWJbHxfphdK2"
+				"bzz-raw://e2134c434de1ea280b804d147d5114873420b8aa25ae4e4c259f19f9a64f688a",
+				"dweb:/ipfs/Qmeq54JHhuYbPCXVYfA5zVd18FfswuDtetAhJyHLLZMwdq"
 			]
 		},
 		"marrige.sol": {
-			"keccak256": "0xdd7c25b5ac5a8e05e86f053363e94ee90e94e1b591d4a40159a80eb01883a16e",
+			"keccak256": "0xe55d9279cc3e1d5240419c3483f020789396906e611ae27a26ee2eddd65eff34",
 			"license": "none",
 			"urls": [
-				"bzz-raw://ed24fda0242182d67e99c6c019855e919de00e0eafdce37602e298ff6725bd79",
-				"dweb:/ipfs/QmaZmZYesJf3ojg5qsvB14wconFTHbzirXud2vmcDUhA4k"
+				"bzz-raw://28d6835ab7e63f8fa8835294060ee3231e389074be038672c4eda8f8225aef2e",
+				"dweb:/ipfs/QmNXitUJ6uUFciSfa2Be3jwAz9PJt5wG1L4FKyE8Q87bG9"
 			]
 		}
 	},

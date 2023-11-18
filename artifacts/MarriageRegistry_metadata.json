@@ -98,11 +98,11 @@
 	},
 	"sources": {
 		"marriage-registry.sol": {
-			"keccak256": "0xcde21baabd427d4bb5e6c52247af005d27cc14cf3b83a5ba6d8c7984c0593875",
+			"keccak256": "0x4a66093cb8b5acc993d7a43ecf092082c0e769bc78fd211c6ac73bf4c731b85d",
 			"license": "none",
 			"urls": [
-				"bzz-raw://70818ad03989604f6cf6940e74e3297bfd93b10c9a9eac2c41f7d5078e16dc61",
-				"dweb:/ipfs/QmWTnbLzP8nqA48ghbb7LDNHu8mbp35TYUSWA4enspVMJi"
+				"bzz-raw://16091fb379656d7d06f677a7bcf0cad3bd46d009e6cd427f19725d7817c6f770",
+				"dweb:/ipfs/QmTz6w8E2JLrvu4fVB49j5CRTbPENvetxZ2j7FHwT1w8be"
 			]
 		}
 	},
